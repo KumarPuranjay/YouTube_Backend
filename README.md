@@ -10,3 +10,4 @@ This entire project is taken from youtube channel "Chai Aur Code" from the serie
 - Migrate it to from mongoose to prisma
 - Docker it into a single image
 - Add load balancing to it using nginx
+
