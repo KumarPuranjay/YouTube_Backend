@@ -2,7 +2,7 @@
 // func can be seen as a generic function which will be used in async-await calls.
 const asyncHandler = (func) => {
     (req, res, next) => {
-        Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err))
+        Promise.resolve(func(req, res, next)).catch((err) => next(err))
     }
 
     // another way to write the above code.
