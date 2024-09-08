@@ -1,7 +1,7 @@
 // this is a template that will be reused in the entire code
 // func can be seen as a generic function which will be used in async-await calls.
 const asyncHandler = (func) => {
-    (req, res, next) => {
+    return (req, res, next) => {
         Promise.resolve(func(req, res, next)).catch((err) => next(err))
     }
 
