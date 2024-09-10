@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import fs from fs;
+import fs from "fs";
 
 // fs library is used to perform file operations in node-js.
 
@@ -22,7 +22,8 @@ const uploadOnCloudinary = async (localFilePath) => {
                 }
             )
         
-        console.log(`file is uploaded on cloudinary: ${uploadResult}`);
+        // console.log(`file is uploaded on cloudinary: ${uploadResult}`);
+        fs.unlinkSync(localFilePath);
         return uploadResult;
     } catch (error) {
         // remove the temporary saved file on backend server.

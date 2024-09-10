@@ -29,7 +29,7 @@ const userSchema = new Schema(
             type: String, // image-url, in our case cloudinary-url
             required: true,
         },
-        converImage: {
+        coverImage: {
             type: String, // image-url, in our case cloudinary-url
         },
         watchHistory: [
@@ -66,7 +66,7 @@ userSchema.pre("save", async function(next) {
 })
 
 // injecting methods into user schema
-userSchema.methods.isPasswordCorrect() = async function(password) {
+userSchema.methods.isPasswordCorrect = async function(password) {
     return await bcrypt.compare(password, this.password);
 }
 
