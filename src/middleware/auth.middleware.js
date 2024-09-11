@@ -3,7 +3,7 @@ import { ApiError } from "../utils/apiErrors.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
-const removeJWT = asyncHandler(async function (req, res, next) {
+const decodeJWT = asyncHandler(async function (req, res, next) {
     try {
         const token = req.cookie?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
     
@@ -22,4 +22,4 @@ const removeJWT = asyncHandler(async function (req, res, next) {
     }
 }); 
 
-export {removeJWT};
+export {decodeJWT};
