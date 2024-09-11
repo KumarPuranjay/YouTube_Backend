@@ -117,7 +117,9 @@ const loginUser = asyncHandler( async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
     const user = await User.findByIdAndUpdate(req.user._id, 
         {
-            $set: {refreshToken: undefined}
+            $unset: {
+                refreshToken: 1
+            }
         },
         {
             new: true
@@ -140,18 +142,18 @@ const logoutUser = asyncHandler(async (req, res) => {
     we use refresh token which will automatically generate a new access token
     without requiring to log in. */
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    const refreshTokenFromUser = req.cookie.refreshToken ?? req.body.refreshToken;
-
-    if(!refreshTokenFromUser) throw new ApiError(401, "Unauthorized request");
-
-    try {
-        const decodedToken = jwt.verify(refreshAccessToken, process.env.REFRESH_TOKEN_SECRET);
+    const refreshTokenFromUser = req.cookie?.refreshToken || req.header("Authorization")?.replace("Bearer ", "");
     
+    if(!refreshTokenFromUser) throw new ApiError(401, "Unauthorized request");
+    
+    try {
+        const decodedToken = jwt.verify(refreshTokenFromUser, process.env.REFRESH_TOKEN_SECRET);
+        
         const user = await User.findById(decodedToken?._id);
     
         if(!user) throw new ApiError(401, "Invalid refresh token");
     
-        if(user?.refreshToken !== refreshAccessToken) throw new ApiError(401, "Refresh token in expired");
+        if(user?.refreshToken !== refreshTokenFromUser) throw new ApiError(401, "Refresh token in expired");
         
         const tokens = await generateAccessAndRefreshToken(user._id);
     
@@ -180,8 +182,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 const changePassword = asyncHandler(async (req, res) => {
     const {oldPassword, newPassword} = req.body;
 
-    const user = User.findById(req.user?._id);
-
+    const user = await User.findById(req.user?._id);
+    
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
     if(!isPasswordCorrect) throw new ApiError(400, "Invalid Old Password");
@@ -340,7 +342,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
             $match: {
-                _id: new mongoose.Types.ObjectId.createFromHexString(req.user?._id)
+                _id: new mongoose.Types.ObjectId(req.user?._id)
             }
         }, 
         {
