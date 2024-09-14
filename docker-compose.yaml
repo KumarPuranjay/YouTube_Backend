@@ -1,0 +1,33 @@
+version: '3.8' # Specify the version of docker-compose
+
+services:
+  app:
+    build: .
+    container_name: express-app
+    restart: always
+    ports:
+      - "8080:8080"  # Map port 5000 on the host to port 5000 on the container
+    environment:
+      - PORT=8080
+      - MONGODB_URI=mongodb+srv://mac_ryder:Helloworld123$@youtubebackend.fir7f.mongodb.net
+    # depends_on:
+    #   - mongo # Ensure MongoDB starts before the Express app
+    networks:
+      - backend
+
+  # mongo:
+  #   image: mongo:6.0 # Use the official MongoDB image
+  #   container_name: mongodb
+  #   ports:
+  #     - "27017:27017"  # Expose MongoDB's default port
+  #   volumes:
+  #     - mongo-data:/data/db # Persist MongoDB data on the host machine
+  #   networks:
+  #     - backend
+
+volumes:
+  mongo-data: # A named volume to persist MongoDB data
+
+networks:
+  backend:
+    driver: bridge  # Create a network for inter-service communication

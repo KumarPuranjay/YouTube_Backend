@@ -1,6 +1,7 @@
 .idea
 ._.idea
 ._README.md
+.DS_Store
 
 # Logs
 logs
@@ -120,3 +121,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+#docker files
+Dockerfile
+.dockerignore
